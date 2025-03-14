@@ -50,7 +50,7 @@ Click on roadmap sections to reveal a sidebar with helpful resources, including:
 ## How to Run the Project
 
 ```bash
-pip install flask google-generativeai requests
+pip install Flask google-generativeai requests Flask-SQLAlchemy Flask-Mail sqlite3 dotenv
 ```
 
 ## Running the Application
