@@ -2,7 +2,9 @@ let currentTransform = { k: 1, x: 0, y: 0 };
         let svg, g;
 
         document.getElementById('generate-btn').addEventListener('click', generateRoadmap);
-
+        const loading = document.getElementById('loading');
+        const hustleLoading = document.getElementById('hustleLoading');
+        const mentalHealthLoading = document.getElementById('mentalHealthLoading');
         // Toggle between views
         document.querySelectorAll('.toggle-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -25,16 +27,19 @@ let currentTransform = { k: 1, x: 0, y: 0 };
         const jobRole = document.getElementById('job-role').value.trim();
         document.getElementById("generateSideHustlesBtn").addEventListener("click", function () {
             if (!jobRole) return alert("Please generate a roadmap first.");
+            hustleLoading.style.display = 'block';
             generateSideHustles(jobRole);
         });
 
         document.getElementById("generateMentalHealthBtn").addEventListener("click", function () {
             if (!jobRole) return alert("Please generate a roadmap first.");
+            mentalHealthLoading.style.display = 'block';
             generateMentalHealthReport(jobRole);
         });
 
         function generateRoadmap() {
             const jobRole = document.getElementById('job-role').value.trim();
+            loading.style.display = 'block';
             if (!jobRole) {
                 alert('Please enter a job role');
                 return;
@@ -80,6 +85,7 @@ let currentTransform = { k: 1, x: 0, y: 0 };
                 document.getElementById('loading').style.display = 'none';
                 alert('Error: ' + error.message);
             });
+            
         }
 
         function parseMarkdown(markdownText) {
@@ -387,6 +393,7 @@ let currentTransform = { k: 1, x: 0, y: 0 };
 
         function showSidebar(sectionName) {
             const sidebar = document.getElementById('sidebar');
+            sidebar.style.display = 'block';
             const sidebarTitle = document.getElementById('sidebar-title');
             const sidebarContent = document.getElementById('sidebar-content');
             const courseList = document.getElementById('course-list');
@@ -458,7 +465,7 @@ let currentTransform = { k: 1, x: 0, y: 0 };
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: `job_role=${encodeURIComponent(jobRole)}`
             });
-        
+            hustleLoading.style.display = 'none';
             const data = await response.json();
             document.getElementById("hustleLoading").style.display = "none";
         
@@ -476,7 +483,7 @@ let currentTransform = { k: 1, x: 0, y: 0 };
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: `job_role=${encodeURIComponent(jobRole)}`
             });
-        
+            mentalHealthLoading.style.display = 'none';
             const data = await response.json();
             document.getElementById("mentalHealthLoading").style.display = "none";
         

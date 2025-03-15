@@ -7,8 +7,59 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/question.css') }}">
+
+    <style>
+        /* Loading screen styles */
+        .loading-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 999;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            width: 80px;
+            height: 80px;
+            border: 10px solid rgba(0, 0, 0, 0.1);
+            border-top-color: #007bff;
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">AI is searching for the best career for you...</p>
+        </div>
+    </div>
+
     <div class="bg-elements">
         <div class="bg-circle circle-1"></div>
         <div class="bg-circle circle-2"></div>
@@ -318,7 +369,7 @@
                     <!-- Questions 4-8 follow similar structure with appropriate icons -->
 
                     <div class="form-footer" data-aos="fade-up">
-                        <button type="submit" class="cta-button">
+                        <button type="submit" class="cta-button" onclick="submitForm(event)">
                             <span>Get Career Recommendation</span>
                             <i class="fas fa-arrow-right"></i>
                         </button>
@@ -331,14 +382,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
         AOS.init({ duration: 800 });
-        
+
         async function submitForm(event) {
             event.preventDefault();
+
+            // Show the loading screen
+            document.getElementById("loading-screen").style.display = "flex";
+
             let answers = [];
             for (let i = 1; i <= 8; i++) {
                 let selected = document.querySelector(`input[name="q${i}"]:checked`);
                 if (selected) answers.push(selected.value);
-                else return alert("Please answer all questions.");
+                else {
+                    alert("Please answer all questions.");
+                    // Hide the loading screen if answers are incomplete
+                    document.getElementById("loading-screen").style.display = "none";
+                    return;
+                }
             }
             
             try {
@@ -347,12 +407,17 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ answers }),
                 });
+
                 const result = await response.json();
-                result.job 
-                    ? window.location.href = `/roadmap/${encodeURIComponent(result.job)}`
-                    : alert("Error generating recommendation");
+                if (result.job) {
+                    window.location.href = `/roadmap/${encodeURIComponent(result.job)}`;
+                } else {
+                    alert("Error generating recommendation");
+                    document.getElementById("loading-screen").style.display = "none"; // Hide loading if error occurs
+                }
             } catch (error) {
                 alert("Error submitting form");
+                document.getElementById("loading-screen").style.display = "none"; // Hide loading if error occurs
             }
         }
     </script>

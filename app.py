@@ -83,8 +83,7 @@ def predict_job(answers):
     7:Build or analyze systems: {answers[6]}
     8:Career goal: {answers[7]}
 
-    Output:
-    [Job Title]
+    Output: should be only the name of the best career not return anythng else.
     """
     
     response = model.generate_content(prompt)
