@@ -101,6 +101,20 @@ def generate_roadmap(job_role):
     response = model.generate_content(prompt)
     return response.text
 
+def generate_school_recommendations(job_role):
+    prompt=f""""Given the career path of a {job_role}, suggest relevant universities, engineering schools, business schools, or specialized institutions in Morocco that can help a student follow this path.
+
+        The output should include:
+
+       - 🎓 School Name
+       - 📍 City
+       - 🧭 Domain(s) of specialization related to this career
+       - 🎯 Why it fits this career path
+       - 🔗 (Optionally, include a link to the official website if known)
+        Organize the list in a structured format with bullet points or table style.
+        Suggest both public and private institutions, and prioritize those known for excellence in the required skills for this job."""
+    response = model.generate_content(prompt)
+    return response.text
 def generate_mental_health_report(job_role):
 
 
@@ -362,6 +376,18 @@ def fetch_research_papers():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+@app.route('/generate-school-recommendations', methods=['POST'])
+def generate_school_recommendations_route():
+    job_role = request.form.get('job_role')
+    if not job_role:
+        return jsonify({"error": "Job role is required"}), 400
+
+    try:
+        school_recommendations_markdown = generate_school_recommendations(job_role)
+        return jsonify({"markdown": school_recommendations_markdown})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/generate-side-hustles', methods=['POST'])
 def generate_side_hustles_route():
     job_role = request.form.get('job_role')

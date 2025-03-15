@@ -3,6 +3,7 @@ let currentTransform = { k: 1, x: 0, y: 0 };
 
         document.getElementById('generate-btn').addEventListener('click', generateRoadmap);
         const loading = document.getElementById('loading');
+        const schoolLoading = document.getElementById('schoolLoading');
         const hustleLoading = document.getElementById('hustleLoading');
         const mentalHealthLoading = document.getElementById('mentalHealthLoading');
         // Toggle between views
@@ -23,8 +24,16 @@ let currentTransform = { k: 1, x: 0, y: 0 };
                 }
             });
         });
+
+
         // Event listeners for generating side hustles and mental health reports
         const jobRole = document.getElementById('job-role').value.trim();
+        document.getElementById("generateSchoolsBtn").addEventListener("click", function () {
+            if (!jobRole) return alert("Please generate a roadmap first.");
+            schoolLoading.style.display = 'block';
+            generateSchools(jobRole);
+        });
+
         document.getElementById("generateSideHustlesBtn").addEventListener("click", function () {
             if (!jobRole) return alert("Please generate a roadmap first.");
             hustleLoading.style.display = 'block';
@@ -456,6 +465,24 @@ let currentTransform = { k: 1, x: 0, y: 0 };
             .catch(error => {
                 console.error('Error fetching papers:', error);
             });
+        }
+
+        async function generateSchools(jobRole) {
+            document.getElementById("schoolLoading").style.display = "block";
+            const response = await fetch("/generate-school-recommendations", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `job_role=${encodeURIComponent(jobRole)}`
+            });
+            schoolLoading.style.display = 'none';
+            const data = await response.json();
+            document.getElementById("schoolLoading").style.display = "none";
+        
+            if (data.markdown) {
+                document.getElementById("schoolResults").innerHTML = marked.parse(data.markdown);
+            } else {
+                document.getElementById("schoolResults").innerHTML = `<p>Error: ${data.error}</p>`;
+            }
         }
 
         async function generateSideHustles(jobRole) {

@@ -387,16 +387,16 @@ button:hover {
 }
 
 /* Side hustles and mental health sections */
-#generateSideHustlesBtn, #generateMentalHealthBtn {
+#generateSideHustlesBtn, #generateMentalHealthBtn, #generateSchoolsBtn {
     background-color: var(--accent);
     margin-bottom: 20px;
 }
 
-#generateSideHustlesBtn:hover, #generateMentalHealthBtn:hover {
+#generateSideHustlesBtn:hover, #generateMentalHealthBtn:hover, #generateSchoolsBtn:hover {
     background-color: #5753d1;
 }
 
-#hustleLoading, #mentalHealthLoading {
+#hustleLoading, #mentalHealthLoading, #schoolLoading {
     padding: 15px;
     margin-bottom: 20px;
     background-color: #f1f9ff;
@@ -404,7 +404,7 @@ button:hover {
     text-align: center;
 }
 
-#hustleResults, #mentalHealthResults {
+#hustleResults, #mentalHealthResults, #schoolResults {
     padding: 20px;
     background-color: white;
     border-radius: 8px;
