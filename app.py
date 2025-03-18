@@ -12,6 +12,7 @@ import os
 import logging
 import json
 from dotenv import load_dotenv
+load_dotenv(override=True)
 
 
 app = Flask(__name__)
@@ -24,8 +25,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'abdallahizarough@gmail.com'  # Replace with your email
-app.config['MAIL_PASSWORD'] = 'skcz cjsd qgie uzki'  # Use App Password for security
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
 
 db = SQLAlchemy(app)
 mail = Mail(app)
@@ -66,7 +67,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-pro')
 
 # YouTube API Key
-YOUTUBE_API_KEY = "AIzaSyCwwZNc6yX6Tty9Y0l4Gtg4pFLMXbrHuVU"
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 
 def predict_job(answers):
     """Send user answers to Gemini and get a predicted job title."""
